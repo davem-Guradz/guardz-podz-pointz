@@ -54,3 +54,50 @@ export async function fetchPodStats() {
 
   return pods;
 }
+
+// Parse the POINT TOTALS section (appears after the first data block)
+// Values in this table are already weighted (BQL×1, SQL×2, AT×3, CW×4)
+export function fetchPointTotals() {
+  return fetch(CSV_URL)
+    .then(res => {
+      if (!res.ok) throw new Error(`Sheet fetch failed: ${res.status}`);
+      return res.text();
+    })
+    .then(text => {
+      const rows = parseCSV(text);
+
+      // Find the POINT TOTALS header row
+      let startIdx = -1;
+      for (let i = 0; i < rows.length; i++) {
+        if ((rows[i][0] || '').toUpperCase().includes('POINT TOTALS')) {
+          startIdx = i;
+          break;
+        }
+      }
+      if (startIdx === -1) return [];
+
+      const entries = [];
+      for (let i = startIdx + 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (row.length < 9) continue;
+        const teamName = (row[3] || '').toLowerCase().trim();
+        if (!KNOWN_TEAMS.includes(teamName)) continue;
+
+        entries.push({
+          ae: row[0] || '',
+          sdr1: row[1] || '',
+          sdr2: row[2] || '',
+          teamId: toTeamId(row[3]),
+          teamName: row[3].trim(),
+          // These are already weighted point values
+          bqlPts: parseInt(row[4], 10) || 0,
+          sqlPts: parseInt(row[5], 10) || 0,
+          activeTrialPts: parseInt(row[6], 10) || 0,
+          closedWonPts: parseInt(row[7], 10) || 0,
+          total: parseInt(row[8], 10) || 0,
+        });
+      }
+
+      return entries.sort((a, b) => b.total - a.total);
+    });
+}

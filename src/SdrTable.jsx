@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Avatar from './Avatar';
+import { TEAMS } from './data';
 
 function MetricBar({ value, max, color }) {
   const pct = Math.min(100, Math.round((value / Math.max(max, 1)) * 100));
@@ -13,24 +13,14 @@ function MetricBar({ value, max, color }) {
   );
 }
 
-const SORT_KEYS = ['points', 'bql', 'sql', 'activeTrial', 'closedWon'];
+const SORT_KEYS = ['total', 'bqlPts', 'sqlPts', 'activeTrialPts', 'closedWonPts'];
 
-export default function SdrTable({ sdrs, photos, filterTeamId }) {
-  const [sort, setSort] = useState('points');
+export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
+  const [sort, setSort] = useState('total');
   const [sortDir, setSortDir] = useState('desc');
 
-  const filtered = filterTeamId
-    ? sdrs.filter(s => s.person?.teamId === filterTeamId)
-    : sdrs;
-
-  const sorted = [...filtered].sort((a, b) => {
-    const av = a[sort] ?? 0, bv = b[sort] ?? 0;
-    return sortDir === 'desc' ? bv - av : av - bv;
-  });
-
-  const maxBql = Math.max(...sdrs.map(s => s.bql), 1);
-  const maxSql = Math.max(...sdrs.map(s => s.sql), 1);
-  const maxTrial = Math.max(...sdrs.map(s => s.activeTrial), 1);
+  // Use live point totals if available, otherwise fall back to hardcoded SDR data
+  const useLive = pointTotals && pointTotals.length > 0;
 
   function toggleSort(key) {
     if (sort === key) setSortDir(d => d === 'desc' ? 'asc' : 'desc');
@@ -52,6 +42,121 @@ export default function SdrTable({ sdrs, photos, filterTeamId }) {
     </th>
   );
 
+  if (useLive) {
+    const filtered = filterTeamId
+      ? pointTotals.filter(r => r.teamId === filterTeamId)
+      : pointTotals;
+
+    const sorted = [...filtered].sort((a, b) => {
+      const av = a[sort] ?? 0, bv = b[sort] ?? 0;
+      return sortDir === 'desc' ? bv - av : av - bv;
+    });
+
+    const maxBql = Math.max(...pointTotals.map(r => r.bqlPts), 1);
+    const maxSql = Math.max(...pointTotals.map(r => r.sqlPts), 1);
+    const maxTrial = Math.max(...pointTotals.map(r => r.activeTrialPts), 1);
+
+    return (
+      <div>
+        <div style={{
+          fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18,
+          color: '#e6edf3', marginBottom: 20,
+        }}>
+          Pod <span style={{ color: '#18df85' }}>Point Totals</span>
+          {filterTeamId && (
+            <span style={{ fontSize: 13, fontWeight: 400, color: '#8b949e', marginLeft: 12, fontFamily: 'var(--font-body)' }}>
+              — filtered by pod
+            </span>
+          )}
+        </div>
+        <div style={{
+          background: '#161b22', border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 16, overflow: 'hidden',
+        }}>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
+              <thead>
+                <tr style={{ background: 'rgba(255,255,255,0.025)' }}>
+                  <TH label="AE" />
+                  <TH label="SDR" />
+                  <TH label="SDR" />
+                  <TH label="Team" />
+                  <TH label="BQL" sortKey="bqlPts" />
+                  <TH label="SQL" sortKey="sqlPts" />
+                  <TH label="Active Trial" sortKey="activeTrialPts" />
+                  <TH label="Closed Won" sortKey="closedWonPts" />
+                  <TH label="Total" sortKey="total" right />
+                </tr>
+              </thead>
+              <tbody>
+                {sorted.map((row, i) => {
+                  const team = TEAMS[row.teamId];
+                  const color = team?.color || '#18df85';
+                  return (
+                    <tr
+                      key={row.teamId}
+                      style={{ borderTop: '1px solid rgba(255,255,255,0.06)', transition: 'background 0.15s' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.025)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#e6edf3', fontWeight: 500 }}>{row.ae}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#e6edf3' }}>{row.sdr1}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#e6edf3' }}>{row.sdr2}</td>
+                      <td style={{ padding: '14px 16px' }}>
+                        <span style={{
+                          fontSize: 11, padding: '3px 10px', borderRadius: 20, fontWeight: 500,
+                          background: color + '18', color,
+                          border: `1px solid ${color}33`,
+                          whiteSpace: 'nowrap',
+                        }}>{row.teamName}</span>
+                      </td>
+                      <td style={{ padding: '14px 16px' }}>
+                        <MetricBar value={row.bqlPts} max={maxBql} color={color} />
+                      </td>
+                      <td style={{ padding: '14px 16px' }}>
+                        <MetricBar value={row.sqlPts} max={maxSql} color={color} />
+                      </td>
+                      <td style={{ padding: '14px 16px' }}>
+                        <MetricBar value={row.activeTrialPts} max={maxTrial} color={color} />
+                      </td>
+                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#e6edf3' }}>
+                        {row.closedWonPts > 0
+                          ? <span style={{ color: '#18df85', fontWeight: 600 }}>🏆 {row.closedWonPts}</span>
+                          : <span style={{ color: '#8b949e' }}>0</span>
+                        }
+                      </td>
+                      <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                        <span style={{
+                          fontFamily: 'var(--font-display)', fontWeight: 800,
+                          fontSize: 20, color,
+                        }}>{row.total}</span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback: original SDR individual view (hardcoded data)
+  const filtered = filterTeamId
+    ? sdrs.filter(s => s.person?.teamId === filterTeamId)
+    : sdrs;
+
+  const sorted = [...filtered].sort((a, b) => {
+    const key = sort === 'total' ? 'points' : sort.replace('Pts', '');
+    const av = a[key] ?? 0, bv = b[key] ?? 0;
+    return sortDir === 'desc' ? bv - av : av - bv;
+  });
+
+  const maxBql = Math.max(...sdrs.map(s => s.bql), 1);
+  const maxSql = Math.max(...sdrs.map(s => s.sql), 1);
+  const maxTrial = Math.max(...sdrs.map(s => s.activeTrial), 1);
+
   return (
     <div>
       <div style={{
@@ -59,11 +164,6 @@ export default function SdrTable({ sdrs, photos, filterTeamId }) {
         color: '#e6edf3', marginBottom: 20,
       }}>
         SDR <span style={{ color: '#18df85' }}>Individual Breakdown</span>
-        {filterTeamId && (
-          <span style={{ fontSize: 13, fontWeight: 400, color: '#8b949e', marginLeft: 12, fontFamily: 'var(--font-body)' }}>
-            — filtered by pod
-          </span>
-        )}
       </div>
       <div style={{
         background: '#161b22', border: '1px solid rgba(255,255,255,0.08)',
@@ -75,36 +175,22 @@ export default function SdrTable({ sdrs, photos, filterTeamId }) {
               <tr style={{ background: 'rgba(255,255,255,0.025)' }}>
                 <TH label="SDR" />
                 <TH label="Pod" />
-                <TH label="BQL" sortKey="bql" />
-                <TH label="SQL" sortKey="sql" />
-                <TH label="Active Trials" sortKey="activeTrial" />
-                <TH label="Closed Won" sortKey="closedWon" />
-                <TH label="Points" sortKey="points" right />
+                <TH label="BQL" sortKey="bqlPts" />
+                <TH label="SQL" sortKey="sqlPts" />
+                <TH label="Active Trials" sortKey="activeTrialPts" />
+                <TH label="Closed Won" sortKey="closedWonPts" />
+                <TH label="Points" sortKey="total" right />
               </tr>
             </thead>
             <tbody>
-              {sorted.map((sdr, i) => (
+              {sorted.map((sdr) => (
                 <tr
                   key={sdr.personId}
-                  style={{ borderTop: '1px solid rgba(255,255,255,0.06)', transition: 'background 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.025)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
                 >
                   <td style={{ padding: '14px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{ position: 'relative' }}>
-                        <Avatar person={sdr.person} photo={photos[sdr.personId]} size={36} />
-                        {i < 3 && (
-                          <div style={{
-                            position: 'absolute', bottom: -2, right: -2,
-                            fontSize: 10, lineHeight: 1,
-                          }}>{i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</div>
-                        )}
-                      </div>
-                      <div>
-                        <div style={{ fontWeight: 500, fontSize: 14, color: '#e6edf3' }}>{sdr.person?.name}</div>
-                        <div style={{ fontSize: 12, color: '#8b949e' }}>AE: {sdr.ae?.name || '—'}</div>
-                      </div>
+                      <div style={{ fontWeight: 500, fontSize: 14, color: '#e6edf3' }}>{sdr.person?.name}</div>
                     </div>
                   </td>
                   <td style={{ padding: '14px 16px' }}>

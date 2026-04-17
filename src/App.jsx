@@ -4,7 +4,7 @@ import {
   getPodStatsForQuarter, getSdrStatsForQuarter,
   loadPhotos, calcPoints,
 } from './data';
-import { fetchPodStats } from './fetchSheet';
+import { fetchPodStats, fetchPointTotals } from './fetchSheet';
 import PodLeaderboard from './PodLeaderboard';
 import TopPerformers from './TopPerformers';
 import SdrTable from './SdrTable';
@@ -62,6 +62,7 @@ export default function App() {
   const [showAdmin, setShowAdmin] = useState(false);
   const [photos, setPhotos] = useState(loadPhotos());
   const [livePods, setLivePods] = useState(null);
+  const [livePointTotals, setLivePointTotals] = useState(null);
   const [lastSync, setLastSync] = useState(null);
 
   // Fetch live data from Google Sheet
@@ -78,6 +79,9 @@ export default function App() {
         }
       })
       .catch(err => console.warn('Sheet fetch failed, using fallback data:', err));
+    fetchPointTotals()
+      .then(data => { if (data.length > 0) setLivePointTotals(data); })
+      .catch(err => console.warn('Point totals fetch failed:', err));
   }, []);
 
   // Auto-refresh every 30 minutes
@@ -259,7 +263,7 @@ export default function App() {
         <TopPerformers sdrs={sdrs.slice(0, 3)} photos={photos} />
 
         {/* SDR TABLE */}
-        <SdrTable sdrs={sdrs} photos={photos} filterTeamId={selectedTeam} />
+        <SdrTable pointTotals={livePointTotals} sdrs={sdrs} photos={photos} filterTeamId={selectedTeam} />
 
         {/* Footer */}
         <div style={{
