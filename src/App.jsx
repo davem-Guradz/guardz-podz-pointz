@@ -250,8 +250,8 @@ export default function App() {
         {/* CHARTS */}
         <StatsChart pods={pods} />
 
-        {/* TOP SDR PERFORMERS */}
-        <TopPerformers sdrs={sdrs.slice(0, 3)} photos={photos} />
+        {/* TOP TEAMS BY AE */}
+        <TopPerformers pods={pods.slice(0, 3)} photos={photos} />
 
         {/* SDR TABLE */}
         <SdrTable pointTotals={livePointTotals} sdrs={sdrs} photos={photos} filterTeamId={selectedTeam} />
