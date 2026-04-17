@@ -15,7 +15,7 @@ import AdminPanel from './AdminPanel';
 function GuardzLogo({ height = 28 }) {
   return (
     <img
-      src="/guardz-logo.png"
+      src="/Guardz.png"
       alt="Guardz"
       style={{
         height,
