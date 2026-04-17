@@ -8,8 +8,11 @@ export const POINT_WEIGHTS = {
 
 // ─── QUARTERS ──────────────────────────────────────────────────────────────
 export const QUARTERS = [
-  { id: 'q2-2026', label: 'Q2 2026', year: 2026, quarter: 'Q2' },
-  { id: 'q1-2026', label: 'Q1 2026', year: 2026, quarter: 'Q1' },
+  { id: 'fy-2026', label: 'FY 2026',  year: 2026, quarter: 'FY' },
+  { id: 'q4-2026', label: 'Q4 2026',  year: 2026, quarter: 'Q4' },
+  { id: 'q3-2026', label: 'Q3 2026',  year: 2026, quarter: 'Q3' },
+  { id: 'q2-2026', label: 'Q2 2026',  year: 2026, quarter: 'Q2' },
+  { id: 'q1-2026', label: 'Q1 2026',  year: 2026, quarter: 'Q1' },
 ];
 
 // ─── TEAMS ─────────────────────────────────────────────────────────────────

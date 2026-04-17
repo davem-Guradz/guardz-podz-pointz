@@ -4,7 +4,7 @@ import {
   getPodStatsForQuarter, getSdrStatsForQuarter,
   loadPhotos, calcPoints,
 } from './data';
-import { fetchPodStats, fetchPointTotals } from './fetchSheet';
+import { fetchPodStats, fetchPointTotals, fetchFYPodStats, fetchFYPointTotals, QUARTER_TABS } from './fetchSheet';
 import PodLeaderboard from './PodLeaderboard';
 import TopPerformers from './TopPerformers';
 import SdrTable from './SdrTable';
@@ -65,9 +65,13 @@ export default function App() {
   const [livePointTotals, setLivePointTotals] = useState(null);
   const [lastSync, setLastSync] = useState(null);
 
-  // Fetch live data from Google Sheet
+  // Fetch live data from Google Sheet for selected quarter
   const refreshData = useCallback(() => {
-    fetchPodStats()
+    const isFY = quarterId === 'fy-2026';
+    const podFetch = isFY ? fetchFYPodStats() : fetchPodStats(quarterId);
+    const ptFetch = isFY ? fetchFYPointTotals() : fetchPointTotals(quarterId);
+
+    podFetch
       .then(data => {
         if (data.length > 0) {
           const enriched = data
@@ -76,23 +80,27 @@ export default function App() {
             .map((s, i) => ({ ...s, rank: i + 1 }));
           setLivePods(enriched);
           setLastSync(new Date());
+        } else {
+          setLivePods(null);
         }
       })
-      .catch(err => console.warn('Sheet fetch failed, using fallback data:', err));
-    fetchPointTotals()
-      .then(data => { if (data.length > 0) setLivePointTotals(data); })
-      .catch(err => console.warn('Point totals fetch failed:', err));
-  }, []);
+      .catch(err => { console.warn('Sheet fetch failed, using fallback data:', err); setLivePods(null); });
 
-  // Auto-refresh every 30 minutes
+    ptFetch
+      .then(data => { setLivePointTotals(data.length > 0 ? data : null); })
+      .catch(err => { console.warn('Point totals fetch failed:', err); setLivePointTotals(null); });
+  }, [quarterId]);
+
+  // Auto-refresh every 30 minutes + on quarter change
   useEffect(() => {
     refreshData();
     const interval = setInterval(refreshData, 30 * 60 * 1000);
     return () => clearInterval(interval);
   }, [refreshData]);
 
-  // Use live data for Q2 2026 if available, otherwise fall back to hardcoded
-  const pods = (quarterId === 'q2-2026' && livePods) ? livePods : getPodStatsForQuarter(quarterId);
+  // Use live data if available, otherwise fall back to hardcoded
+  const hasTab = quarterId === 'fy-2026' || !!QUARTER_TABS[quarterId];
+  const pods = (hasTab && livePods) ? livePods : getPodStatsForQuarter(quarterId);
   const sdrs = getSdrStatsForQuarter(quarterId);
 
   const totalBql      = pods.reduce((s, p) => s + p.bql, 0);
