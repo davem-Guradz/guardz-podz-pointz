@@ -1,11 +1,11 @@
 import React from 'react';
 
 const rankColors = {
-  1: { badge: '#f4c542', badgeText: '#1a0f00', border: 'rgba(244,197,66,0.4)', glow: 'rgba(244,197,66,0.08)' },
+  1: { badge: '#f4c542', badgeText: '#1a0f00', border: 'rgba(244,197,66,0.4)', glow: 'rgba(244,197,66,0.06)' },
   2: { badge: '#adb5bd', badgeText: '#0d0d0d', border: 'rgba(173,181,189,0.3)', glow: 'none' },
-  3: { badge: '#cd7f32', badgeText: '#0d0d0d', border: 'rgba(205,127,50,0.3)', glow: 'none' },
-  4: { badge: '#1c2230', badgeText: '#8b949e', border: 'rgba(255,255,255,0.08)', glow: 'none' },
-  5: { badge: '#1c2230', badgeText: '#8b949e', border: 'rgba(255,255,255,0.08)', glow: 'none' },
+  3: { badge: '#cd7f32', badgeText: '#ffffff', border: 'rgba(205,127,50,0.3)', glow: 'none' },
+  4: { badge: '#e9ecef', badgeText: '#6b7280', border: 'rgba(0,0,0,0.08)', glow: 'none' },
+  5: { badge: '#e9ecef', badgeText: '#6b7280', border: 'rgba(0,0,0,0.08)', glow: 'none' },
 };
 
 function PodCard({ pod, onSelect, selected }) {
@@ -18,8 +18,8 @@ function PodCard({ pod, onSelect, selected }) {
       onClick={() => onSelect && onSelect(pod.teamId)}
       style={{
         background: selected
-          ? `linear-gradient(145deg, #161b22, rgba(24,223,133,0.06))`
-          : 'linear-gradient(145deg, #161b22, #1c2230)',
+          ? `linear-gradient(145deg, #ffffff, rgba(24,223,133,0.04))`
+          : '#ffffff',
         border: `1px solid ${selected ? pod.team.color + '66' : rc.border}`,
         borderRadius: 20,
         padding: '28px 20px 20px',
@@ -27,7 +27,7 @@ function PodCard({ pod, onSelect, selected }) {
         position: 'relative',
         cursor: 'pointer',
         transition: 'all 0.25s ease',
-        boxShadow: selected ? `0 8px 32px ${pod.team.color}18` : 'none',
+        boxShadow: selected ? `0 8px 32px ${pod.team.color}14` : '0 1px 3px rgba(0,0,0,0.04)',
       }}
       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; }}
       onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
@@ -48,7 +48,7 @@ function PodCard({ pod, onSelect, selected }) {
 
       <div style={{
         fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14,
-        color: '#e6edf3', marginBottom: 14, minHeight: 36,
+        color: '#1a1a2e', marginBottom: 14, minHeight: 36,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>{pod.team.name}</div>
 
@@ -57,12 +57,12 @@ function PodCard({ pod, onSelect, selected }) {
         fontSize: 44, lineHeight: 1, color: pod.team.color,
         marginBottom: 2,
       }}>{pod.points}</div>
-      <div style={{ fontSize: 10, color: '#8b949e', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 16 }}>
+      <div style={{ fontSize: 10, color: '#6b7280', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 16 }}>
         points
       </div>
 
       {/* progress bar */}
-      <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, marginBottom: 16 }}>
+      <div style={{ height: 3, background: 'rgba(0,0,0,0.06)', borderRadius: 2, marginBottom: 16 }}>
         <div style={{
           height: '100%', borderRadius: 2,
           background: pod.team.color,
@@ -80,12 +80,12 @@ function PodCard({ pod, onSelect, selected }) {
           { l: 'Won', v: pod.closedWon },
         ].map(({ l, v }) => (
           <div key={l} style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.07)',
+            background: '#f3f4f6',
+            border: '1px solid rgba(0,0,0,0.06)',
             borderRadius: 8, padding: '3px 8px',
-            fontSize: 11, color: '#8b949e',
+            fontSize: 11, color: '#6b7280',
           }}>
-            <span style={{ color: '#c9d1d9', fontWeight: 600 }}>{v}</span> {l}
+            <span style={{ color: '#1a1a2e', fontWeight: 600 }}>{v}</span> {l}
           </div>
         ))}
       </div>
@@ -99,15 +99,15 @@ export default function PodLeaderboard({ pods, selectedTeam, onSelectTeam }) {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20,
       }}>
-        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#e6edf3' }}>
+        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#1a1a2e' }}>
           Pod <span style={{ color: '#18df85' }}>Leaderboard</span>
         </div>
         {selectedTeam && (
           <button
             onClick={() => onSelectTeam(null)}
             style={{
-              background: 'transparent', border: '1px solid rgba(255,255,255,0.08)',
-              color: '#8b949e', fontSize: 12, padding: '4px 12px', borderRadius: 8,
+              background: 'transparent', border: '1px solid rgba(0,0,0,0.1)',
+              color: '#6b7280', fontSize: 12, padding: '4px 12px', borderRadius: 8,
             }}>
             Clear filter ✕
           </button>

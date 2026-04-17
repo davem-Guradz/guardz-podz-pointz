@@ -8,13 +8,13 @@ export default function TopPerformers({ sdrs, photos }) {
 
   const Card = ({ sdr, medal, glow }) => (
     <div style={{
-      background: 'linear-gradient(145deg, #161b22, #1c2230)',
-      border: `1px solid ${glow ? 'rgba(24,223,133,0.4)' : 'rgba(255,255,255,0.08)'}`,
+      background: '#ffffff',
+      border: `1px solid ${glow ? 'rgba(24,223,133,0.4)' : 'rgba(0,0,0,0.08)'}`,
       borderRadius: 20,
       padding: '28px 24px',
       textAlign: 'center',
       position: 'relative',
-      boxShadow: glow ? '0 0 40px rgba(24,223,133,0.08)' : 'none',
+      boxShadow: glow ? '0 4px 24px rgba(24,223,133,0.08)' : '0 1px 3px rgba(0,0,0,0.04)',
       transition: 'transform 0.2s',
     }}>
       <div style={{
@@ -35,21 +35,21 @@ export default function TopPerformers({ sdrs, photos }) {
         </div>
       </div>
 
-      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, color: '#e6edf3', marginBottom: 4 }}>
+      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, color: '#1a1a2e', marginBottom: 4 }}>
         {sdr.person?.name}
       </div>
-      <div style={{ fontSize: 11, color: sdr.team?.color || '#8b949e', marginBottom: 16, fontWeight: 500 }}>
+      <div style={{ fontSize: 11, color: sdr.team?.color || '#6b7280', marginBottom: 16, fontWeight: 500 }}>
         {sdr.team?.name}
       </div>
 
       <div style={{ display: 'flex', gap: 20, justifyContent: 'center' }}>
         <div>
           <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 28, color: '#18df85', lineHeight: 1 }}>{sdr.points}</div>
-          <div style={{ fontSize: 10, color: '#8b949e', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>Points</div>
+          <div style={{ fontSize: 10, color: '#6b7280', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>Points</div>
         </div>
         <div>
-          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 28, color: '#e6edf3', lineHeight: 1 }}>{sdr.sql}</div>
-          <div style={{ fontSize: 10, color: '#8b949e', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>SQLs</div>
+          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 28, color: '#1a1a2e', lineHeight: 1 }}>{sdr.sql}</div>
+          <div style={{ fontSize: 10, color: '#6b7280', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>SQLs</div>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@ export default function TopPerformers({ sdrs, photos }) {
     <div style={{ marginBottom: 48 }}>
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24,
-        fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#e6edf3',
+        fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#1a1a2e',
       }}>
         🏆 Top <span style={{ color: '#18df85' }}>SDR Performers</span>
       </div>

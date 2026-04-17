@@ -5,8 +5,8 @@ function MetricBar({ value, max, color }) {
   const pct = Math.min(100, Math.round((value / Math.max(max, 1)) * 100));
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <span style={{ minWidth: 20, fontSize: 13, color: '#e6edf3' }}>{value}</span>
-      <div style={{ width: 56, height: 3, background: 'rgba(255,255,255,0.07)', borderRadius: 2, flexShrink: 0 }}>
+      <span style={{ minWidth: 20, fontSize: 13, color: '#1a1a2e' }}>{value}</span>
+      <div style={{ width: 56, height: 3, background: 'rgba(0,0,0,0.06)', borderRadius: 2, flexShrink: 0 }}>
         <div style={{ height: '100%', borderRadius: 2, background: color, width: `${pct}%` }} />
       </div>
     </div>
@@ -19,7 +19,6 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
   const [sort, setSort] = useState('total');
   const [sortDir, setSortDir] = useState('desc');
 
-  // Use live point totals if available, otherwise fall back to hardcoded SDR data
   const useLive = pointTotals && pointTotals.length > 0;
 
   function toggleSort(key) {
@@ -33,7 +32,7 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
       style={{
         padding: '12px 16px',
         textAlign: right ? 'right' : 'left',
-        fontSize: 10, fontWeight: 600, color: sort === sortKey ? '#18df85' : '#8b949e',
+        fontSize: 10, fontWeight: 600, color: sort === sortKey ? '#0fb86d' : '#6b7280',
         letterSpacing: 1, textTransform: 'uppercase',
         cursor: sortKey ? 'pointer' : 'default',
         userSelect: 'none', whiteSpace: 'nowrap',
@@ -60,23 +59,24 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
       <div>
         <div style={{
           fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18,
-          color: '#e6edf3', marginBottom: 20,
+          color: '#1a1a2e', marginBottom: 20,
         }}>
           Pod <span style={{ color: '#18df85' }}>Point Totals</span>
           {filterTeamId && (
-            <span style={{ fontSize: 13, fontWeight: 400, color: '#8b949e', marginLeft: 12, fontFamily: 'var(--font-body)' }}>
+            <span style={{ fontSize: 13, fontWeight: 400, color: '#6b7280', marginLeft: 12, fontFamily: 'var(--font-body)' }}>
               — filtered by pod
             </span>
           )}
         </div>
         <div style={{
-          background: '#161b22', border: '1px solid rgba(255,255,255,0.08)',
+          background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)',
           borderRadius: 16, overflow: 'hidden',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
         }}>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
               <thead>
-                <tr style={{ background: 'rgba(255,255,255,0.025)' }}>
+                <tr style={{ background: '#f9fafb' }}>
                   <TH label="AE" />
                   <TH label="SDR" />
                   <TH label="SDR" />
@@ -89,19 +89,19 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
                 </tr>
               </thead>
               <tbody>
-                {sorted.map((row, i) => {
+                {sorted.map((row) => {
                   const team = TEAMS[row.teamId];
                   const color = team?.color || '#18df85';
                   return (
                     <tr
                       key={row.teamId}
-                      style={{ borderTop: '1px solid rgba(255,255,255,0.06)', transition: 'background 0.15s' }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.025)'}
+                      style={{ borderTop: '1px solid rgba(0,0,0,0.06)', transition: 'background 0.15s' }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
                       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                     >
-                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#e6edf3', fontWeight: 500 }}>{row.ae}</td>
-                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#e6edf3' }}>{row.sdr1}</td>
-                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#e6edf3' }}>{row.sdr2}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#1a1a2e', fontWeight: 500 }}>{row.ae}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#4a5568' }}>{row.sdr1}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 14, color: '#4a5568' }}>{row.sdr2}</td>
                       <td style={{ padding: '14px 16px' }}>
                         <span style={{
                           fontSize: 11, padding: '3px 10px', borderRadius: 20, fontWeight: 500,
@@ -119,10 +119,10 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
                       <td style={{ padding: '14px 16px' }}>
                         <MetricBar value={row.activeTrialPts} max={maxTrial} color={color} />
                       </td>
-                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#e6edf3' }}>
+                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#1a1a2e' }}>
                         {row.closedWonPts > 0
-                          ? <span style={{ color: '#18df85', fontWeight: 600 }}>🏆 {row.closedWonPts}</span>
-                          : <span style={{ color: '#8b949e' }}>0</span>
+                          ? <span style={{ color: '#0fb86d', fontWeight: 600 }}>🏆 {row.closedWonPts}</span>
+                          : <span style={{ color: '#6b7280' }}>0</span>
                         }
                       </td>
                       <td style={{ padding: '14px 16px', textAlign: 'right' }}>
@@ -161,18 +161,19 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
     <div>
       <div style={{
         fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18,
-        color: '#e6edf3', marginBottom: 20,
+        color: '#1a1a2e', marginBottom: 20,
       }}>
         SDR <span style={{ color: '#18df85' }}>Individual Breakdown</span>
       </div>
       <div style={{
-        background: '#161b22', border: '1px solid rgba(255,255,255,0.08)',
+        background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)',
         borderRadius: 16, overflow: 'hidden',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
       }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 640 }}>
             <thead>
-              <tr style={{ background: 'rgba(255,255,255,0.025)' }}>
+              <tr style={{ background: '#f9fafb' }}>
                 <TH label="SDR" />
                 <TH label="Pod" />
                 <TH label="BQL" sortKey="bqlPts" />
@@ -186,12 +187,10 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
               {sorted.map((sdr) => (
                 <tr
                   key={sdr.personId}
-                  style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+                  style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
                 >
                   <td style={{ padding: '14px 16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{ fontWeight: 500, fontSize: 14, color: '#e6edf3' }}>{sdr.person?.name}</div>
-                    </div>
+                    <div style={{ fontWeight: 500, fontSize: 14, color: '#1a1a2e' }}>{sdr.person?.name}</div>
                   </td>
                   <td style={{ padding: '14px 16px' }}>
                     <span style={{
@@ -211,10 +210,10 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
                   <td style={{ padding: '14px 16px' }}>
                     <MetricBar value={sdr.activeTrial} max={maxTrial} color={sdr.team?.color || '#18df85'} />
                   </td>
-                  <td style={{ padding: '14px 16px', fontSize: 13, color: '#e6edf3' }}>
+                  <td style={{ padding: '14px 16px', fontSize: 13, color: '#1a1a2e' }}>
                     {sdr.closedWon > 0
-                      ? <span style={{ color: '#18df85', fontWeight: 600 }}>🏆 {sdr.closedWon}</span>
-                      : <span style={{ color: '#8b949e' }}>0</span>
+                      ? <span style={{ color: '#0fb86d', fontWeight: 600 }}>🏆 {sdr.closedWon}</span>
+                      : <span style={{ color: '#6b7280' }}>0</span>
                     }
                   </td>
                   <td style={{ padding: '14px 16px', textAlign: 'right' }}>

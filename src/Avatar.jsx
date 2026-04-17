@@ -32,7 +32,7 @@ export default function Avatar({ person, photo, size = 40, className = '' }) {
     fontWeight: 700,
     fontFamily: 'var(--font-body)',
     overflow: 'hidden',
-    border: '2px solid rgba(255,255,255,0.06)',
+    border: '2px solid rgba(0,0,0,0.06)',
   };
 
   if (photo) {
