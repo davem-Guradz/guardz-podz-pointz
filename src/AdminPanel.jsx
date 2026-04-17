@@ -152,8 +152,8 @@ export default function AdminPanel({ photos, onPhotosChange, onClose }) {
                   <div style={{ fontWeight: 600, color: '#e6edf3', marginBottom: 12 }}>Point System</div>
                   <div>• BQL = <strong style={{ color: '#18df85' }}>1 point</strong></div>
                   <div>• SQL = <strong style={{ color: '#18df85' }}>2 points</strong></div>
-                  <div>• Active Trial = <strong style={{ color: '#18df85' }}>2 points</strong></div>
-                  <div>• Closed Won = <strong style={{ color: '#18df85' }}>5 points</strong></div>
+                  <div>• Active Trial = <strong style={{ color: '#18df85' }}>3 points</strong></div>
+                  <div>• Closed Won = <strong style={{ color: '#18df85' }}>4 points</strong></div>
                   <div style={{ marginTop: 20, fontWeight: 600, color: '#e6edf3', marginBottom: 12 }}>Data</div>
                   <div>To update data for a new period, edit <code style={{ color: '#18df85' }}>src/data.js</code> and add entries to <code style={{ color: '#18df85' }}>POD_STATS_RAW</code> and <code style={{ color: '#18df85' }}>SDR_STATS_RAW</code>.</div>
                   <div style={{ marginTop: 20, fontWeight: 600, color: '#e6edf3', marginBottom: 12 }}>Security</div>

@@ -2,8 +2,8 @@
 export const POINT_WEIGHTS = {
   bql: 1,
   sql: 2,
-  activeTrial: 2,
-  closedWon: 5,
+  activeTrial: 3,
+  closedWon: 4,
 };
 
 // ─── QUARTERS ──────────────────────────────────────────────────────────────
@@ -51,11 +51,11 @@ export const PEOPLE = [
 // Each entry represents one pod's combined stats for the quarter.
 export const POD_STATS_RAW = {
   'q2-2026': [
-    { teamId: 'dream-team',         bql: 31, sql: 7,  activeTrial: 18, closedWon: 3 },
-    { teamId: 'goatz',               bql: 17, sql: 5,  activeTrial: 19, closedWon: 1 },
-    { teamId: 'in-guardz-we-trust',  bql: 17, sql: 8,  activeTrial: 13, closedWon: 2 },
-    { teamId: 'magen-miami',         bql: 7,  sql: 3,  activeTrial: 15, closedWon: 0 },
-    { teamId: 'revenue-chasers',     bql: 20, sql: 3,  activeTrial: 5,  closedWon: 1 },
+    { teamId: 'dream-team',         bql: 37, sql: 7,  activeTrial: 19, closedWon: 4 },
+    { teamId: 'goatz',               bql: 19, sql: 5,  activeTrial: 19, closedWon: 1 },
+    { teamId: 'in-guardz-we-trust',  bql: 22, sql: 10, activeTrial: 17, closedWon: 2 },
+    { teamId: 'magen-miami',         bql: 8,  sql: 4,  activeTrial: 18, closedWon: 0 },
+    { teamId: 'revenue-chasers',     bql: 22, sql: 3,  activeTrial: 8,  closedWon: 2 },
   ],
   'q1-2026': [
     { teamId: 'dream-team',         bql: 28, sql: 12, activeTrial: 22, closedWon: 5 },

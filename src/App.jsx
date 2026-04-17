@@ -1,22 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   QUARTERS, TEAMS,
   getPodStatsForQuarter, getSdrStatsForQuarter,
-  loadPhotos,
+  loadPhotos, calcPoints,
 } from './data';
+import { fetchPodStats } from './fetchSheet';
 import PodLeaderboard from './PodLeaderboard';
 import TopPerformers from './TopPerformers';
 import SdrTable from './SdrTable';
 import StatsChart from './StatsChart';
 import AdminPanel from './AdminPanel';
 
-// ─── Logo SVG ────────────────────────────────────────────────────────────────
-function GuardzLogo({ size = 28 }) {
+// ─── Logo ────────────────────────────────────────────────────────────────────
+function GuardzLogo({ height = 28 }) {
   return (
-    <svg width={size * 4.2} height={size} viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="0" y="22" fontFamily="'Syne',sans-serif" fontWeight="800" fontSize="24" fill="white">Guardz</text>
-      <circle cx="116" cy="22" r="5" fill="#18df85" />
-    </svg>
+    <img
+      src="/guardz-logo.png"
+      alt="Guardz"
+      style={{
+        height,
+        width: 'auto',
+        filter: 'brightness(0) invert(1)',
+        display: 'block',
+      }}
+    />
   );
 }
 
@@ -54,8 +61,34 @@ export default function App() {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [showAdmin, setShowAdmin] = useState(false);
   const [photos, setPhotos] = useState(loadPhotos());
+  const [livePods, setLivePods] = useState(null);
+  const [lastSync, setLastSync] = useState(null);
 
-  const pods = getPodStatsForQuarter(quarterId);
+  // Fetch live data from Google Sheet
+  const refreshData = useCallback(() => {
+    fetchPodStats()
+      .then(data => {
+        if (data.length > 0) {
+          const enriched = data
+            .map(s => ({ ...s, team: TEAMS[s.teamId], points: calcPoints(s) }))
+            .sort((a, b) => b.points - a.points)
+            .map((s, i) => ({ ...s, rank: i + 1 }));
+          setLivePods(enriched);
+          setLastSync(new Date());
+        }
+      })
+      .catch(err => console.warn('Sheet fetch failed, using fallback data:', err));
+  }, []);
+
+  // Auto-refresh every 30 minutes
+  useEffect(() => {
+    refreshData();
+    const interval = setInterval(refreshData, 30 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [refreshData]);
+
+  // Use live data for Q2 2026 if available, otherwise fall back to hardcoded
+  const pods = (quarterId === 'q2-2026' && livePods) ? livePods : getPodStatsForQuarter(quarterId);
   const sdrs = getSdrStatsForQuarter(quarterId);
 
   const totalBql      = pods.reduce((s, p) => s + p.bql, 0);
@@ -116,7 +149,7 @@ export default function App() {
       }}>
         {/* Left: logo + subtitle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <GuardzLogo size={26} />
+          <GuardzLogo height={26} />
           <div style={{ width: 1, height: 18, background: 'rgba(255,255,255,0.1)' }} />
           <span style={{ fontSize: 13, color: '#8b949e', fontWeight: 500, letterSpacing: 0.3 }}>
             Podz Pointz
@@ -236,11 +269,12 @@ export default function App() {
           flexWrap: 'wrap', gap: 12,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <GuardzLogo size={18} />
+            <GuardzLogo height={18} />
             <span style={{ fontSize: 12, color: '#8b949e' }}>Podz Pointz · {quarterLabel}</span>
           </div>
           <div style={{ fontSize: 11, color: '#8b949e' }}>
-            Scoring: BQL×1 · SQL×2 · Active Trial×2 · Closed Won×5
+            Scoring: BQL×1 · SQL×2 · Active Trial×3 · Closed Won×4
+            {lastSync && <span style={{ marginLeft: 12, color: '#18df85' }}>● Live · synced {lastSync.toLocaleTimeString()}</span>}
           </div>
         </div>
       </main>
