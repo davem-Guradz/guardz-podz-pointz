@@ -1,5 +1,6 @@
 const SHEET_ID = '1gyQvlraX-nNu0yI1xWIpI8a1e3e6yKWjJPtJaNVjrn4';
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+const SHEET_TAB = 'Q2 Live';
+const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_TAB)}`;
 
 // Team name in sheet → our internal ID
 function toTeamId(name) {
