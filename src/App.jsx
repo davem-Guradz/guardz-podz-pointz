@@ -26,34 +26,6 @@ function GuardzLogo({ height = 28 }) {
   );
 }
 
-// ─── Hero stat card ──────────────────────────────────────────────────────────
-function StatCard({ label, value, sub, accent }) {
-  return (
-    <div style={{
-      background: '#ffffff',
-      border: '1px solid rgba(0,0,0,0.08)',
-      borderRadius: 16,
-      padding: '20px 24px',
-      position: 'relative',
-      overflow: 'hidden',
-      animation: 'fadeInUp 0.4s ease both',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-    }}>
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: `linear-gradient(90deg, transparent, ${accent || '#18df85'}, transparent)`,
-        opacity: 0.7,
-      }} />
-      <div style={{ fontSize: 10, fontWeight: 600, color: '#6b7280', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>
-        {label}
-      </div>
-      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 34, lineHeight: 1, color: '#1a1a2e' }}>
-        {value}
-      </div>
-      {sub && <div style={{ fontSize: 12, color: '#6b7280', marginTop: 6 }}>{sub}</div>}
-    </div>
-  );
-}
 
 // ─── Main App ────────────────────────────────────────────────────────────────
 export default function App() {
@@ -103,15 +75,8 @@ export default function App() {
   const pods = (hasTab && livePods) ? livePods : getPodStatsForQuarter(quarterId);
   const sdrs = getSdrStatsForQuarter(quarterId);
 
-  const totalBql      = pods.reduce((s, p) => s + p.bql, 0);
-  const totalSql      = pods.reduce((s, p) => s + p.sql, 0);
-  const totalTrials   = pods.reduce((s, p) => s + p.activeTrial, 0);
-  const totalWon      = pods.reduce((s, p) => s + p.closedWon, 0);
-  const leader        = pods[0];
-
-  const quarterLabel  = QUARTERS.find(q => q.id === quarterId)?.label || '';
-
-  const years = [...new Set(QUARTERS.map(q => q.year))];
+  const leader       = pods[0];
+  const quarterLabel = QUARTERS.find(q => q.id === quarterId)?.label || '';
 
   function handlePhotoChange(personId, dataUrl) {
     setPhotos(prev => {
@@ -120,22 +85,6 @@ export default function App() {
       else delete next[personId];
       return next;
     });
-  }
-
-  // Animated counter
-  function AnimNum({ n }) {
-    const [display, setDisplay] = useState(0);
-    useEffect(() => {
-      let start = 0;
-      const step = Math.ceil(n / 20);
-      const iv = setInterval(() => {
-        start += step;
-        if (start >= n) { setDisplay(n); clearInterval(iv); }
-        else setDisplay(start);
-      }, 30);
-      return () => clearInterval(iv);
-    }, [n]);
-    return display;
   }
 
   return (
@@ -196,14 +145,6 @@ export default function App() {
 
       {/* MAIN */}
       <main style={{ position: 'relative', zIndex: 1, padding: '32px 28px', maxWidth: 1360, margin: '0 auto' }}>
-
-        {/* HERO STATS */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, marginBottom: 40 }}>
-          <StatCard label="Total BQLs" value={totalBql} sub={`Across ${pods.length} pods`} />
-          <StatCard label="Total SQLs" value={totalSql} sub="Q target: 40" accent="#64b4ff" />
-          <StatCard label="Active Trials" value={totalTrials} sub="↑ pipeline health" accent="#ffb432" />
-          <StatCard label="Closed Won" value={totalWon} sub={`Leader: ${leader?.team?.name}`} accent="#f4c542" />
-        </div>
 
         {/* LEADER BANNER */}
         {leader && (
