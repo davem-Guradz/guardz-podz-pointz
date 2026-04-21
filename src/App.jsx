@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   QUARTERS, TEAMS,
   getPodStatsForQuarter, getSdrStatsForQuarter,
-  loadPhotos, calcPoints,
+  loadPhotos, loadAllPhotos, calcPoints,
 } from './data';
 import { fetchPodStats, fetchPointTotals, fetchFYPodStats, fetchFYPointTotals, QUARTER_TABS } from './fetchSheet';
 import PodLeaderboard from './PodLeaderboard';
@@ -32,7 +32,12 @@ export default function App() {
   const [quarterId, setQuarterId] = useState('q2-2026');
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [showAdmin, setShowAdmin] = useState(false);
-  const [photos, setPhotos] = useState(loadPhotos());
+  const [photos, setPhotos] = useState(loadPhotos()); // localStorage seed; merged with photos.json below
+
+  // Load committed photos.json (visible to all) merged with any localStorage overrides
+  useEffect(() => {
+    loadAllPhotos().then(setPhotos);
+  }, []);
   const [livePods, setLivePods] = useState(null);
   const [livePointTotals, setLivePointTotals] = useState(null);
   const [lastSync, setLastSync] = useState(null);

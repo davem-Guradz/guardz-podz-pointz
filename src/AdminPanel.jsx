@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Avatar from './Avatar';
-import { PEOPLE, TEAMS, DEFAULT_ADMIN_HASH, savePhoto, removePhoto } from './data';
+import { PEOPLE, TEAMS, DEFAULT_ADMIN_HASH, savePhoto, removePhoto, exportPhotosJSON } from './data';
 
 export default function AdminPanel({ photos, onPhotosChange, onClose }) {
   const [pass, setPass] = useState('');
@@ -8,7 +8,15 @@ export default function AdminPanel({ photos, onPhotosChange, onClose }) {
   const [error, setError] = useState('');
   const [tab, setTab] = useState('photos');
   const [uploadingFor, setUploadingFor] = useState(null);
+  const [exportMsg, setExportMsg] = useState('');
   const fileRef = useRef();
+
+  async function handleExport() {
+    const json = await exportPhotosJSON();
+    await navigator.clipboard.writeText(json);
+    setExportMsg('Copied! Paste to Claude to publish for all viewers.');
+    setTimeout(() => setExportMsg(''), 4000);
+  }
 
   function handleLogin(e) {
     e.preventDefault();
@@ -138,9 +146,20 @@ export default function AdminPanel({ photos, onPhotosChange, onClose }) {
             <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
               {tab === 'photos' && (
                 <>
-                  <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
-                    Upload profile photos for SDRs and AEs. Photos are saved locally in the browser.
+                  <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>
+                    Upload photos below. To make them visible to <strong>all viewers</strong>, click Export and paste the result to Claude.
                   </div>
+                  <button
+                    onClick={handleExport}
+                    style={{
+                      background: '#f3f4f6', border: '1px solid rgba(0,0,0,0.1)',
+                      color: '#1a1a2e', fontSize: 12, padding: '6px 14px',
+                      borderRadius: 8, fontWeight: 600, marginBottom: 4, width: '100%',
+                    }}>
+                    📋 Export photos to clipboard
+                  </button>
+                  {exportMsg && <div style={{ fontSize: 12, color: '#0fb86d', marginBottom: 12 }}>{exportMsg}</div>}
+                  {!exportMsg && <div style={{ height: 12 }} />}
                   <div style={{ marginBottom: 16, fontWeight: 500, fontSize: 12, color: '#6b7280', letterSpacing: 1, textTransform: 'uppercase' }}>SDRs</div>
                   {sdrs.map(p => <PersonRow key={p.id} person={p} />)}
                   <div style={{ marginTop: 20, marginBottom: 16, fontWeight: 500, fontSize: 12, color: '#6b7280', letterSpacing: 1, textTransform: 'uppercase' }}>AEs</div>

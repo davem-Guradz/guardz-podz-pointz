@@ -138,13 +138,28 @@ export function getSdrStatsForQuarter(quarterId) {
     .map((s, i) => ({ ...s, rank: i + 1 }));
 }
 
-// ─── LOCAL STORAGE HELPERS (admin-uploaded photos) ──────────────────────────
+// ─── PHOTO STORAGE ──────────────────────────────────────────────────────────
+// Photos are stored in two places:
+//   1. public/photos.json  — committed to git, visible to ALL visitors
+//   2. localStorage        — admin overrides, local browser only
+// On load we merge both; localStorage takes precedence.
+
 export const STORAGE_KEY = 'guardz_podz_photos';
 
 export function loadPhotos() {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
   } catch { return {}; }
+}
+
+// Fetch the committed photos.json and merge with localStorage overrides
+export async function loadAllPhotos() {
+  let committed = {};
+  try {
+    const res = await fetch('/photos.json?v=' + Date.now());
+    if (res.ok) committed = await res.json();
+  } catch { /* ignore */ }
+  return { ...committed, ...loadPhotos() };
 }
 
 export function savePhoto(personId, dataUrl) {
@@ -157,6 +172,17 @@ export function removePhoto(personId) {
   const photos = loadPhotos();
   delete photos[personId];
   localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
+}
+
+// Merge current localStorage photos with committed photos.json and return full JSON string
+export async function exportPhotosJSON() {
+  let committed = {};
+  try {
+    const res = await fetch('/photos.json');
+    if (res.ok) committed = await res.json();
+  } catch { /* ignore */ }
+  const merged = { ...committed, ...loadPhotos() };
+  return JSON.stringify(merged, null, 2);
 }
 
 // ─── ADMIN PASSWORD (hashed simple) ─────────────────────────────────────────
