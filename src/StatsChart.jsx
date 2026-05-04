@@ -26,7 +26,7 @@ export default function StatsChart({ pods }) {
   const data = pods.map(p => ({
     name: p.team.name.length > 12 ? p.team.name.slice(0, 11) + '…' : p.team.name,
     fullName: p.team.name,
-    BQL: p.bql,
+    'Completed Meeting Count': p.bql,
     SQL: p.sql,
     Trials: p.activeTrial,
     Won: p.closedWon,
@@ -53,7 +53,7 @@ export default function StatsChart({ pods }) {
               width={28}
             />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.03)' }} />
-            <Bar dataKey="BQL" radius={[4,4,0,0]}>
+            <Bar dataKey="Completed Meeting Count" radius={[4,4,0,0]}>
               {data.map((d, i) => <Cell key={i} fill={d.color + 'cc'} />)}
             </Bar>
             <Bar dataKey="SQL" radius={[4,4,0,0]}>
@@ -62,10 +62,13 @@ export default function StatsChart({ pods }) {
             <Bar dataKey="Trials" radius={[4,4,0,0]}>
               {data.map((d, i) => <Cell key={i} fill={d.color + '55'} />)}
             </Bar>
+            <Bar dataKey="Won" radius={[4,4,0,0]}>
+              {data.map((d, i) => <Cell key={i} fill={d.color + '33'} />)}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
         <div style={{ display: 'flex', gap: 20, justifyContent: 'center', marginTop: 8 }}>
-          {[['BQL', 'cc'], ['SQL', '88'], ['Trials', '55']].map(([l, a]) => (
+          {[['Completed Meeting Count', 'cc'], ['SQL', '88'], ['Trials', '55'], ['Won', '33']].map(([l, a]) => (
             <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#6b7280' }}>
               <div style={{ width: 10, height: 10, borderRadius: 2, background: '#18df85' + a }} />
               {l}

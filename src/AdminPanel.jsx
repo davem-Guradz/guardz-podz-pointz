@@ -170,7 +170,7 @@ export default function AdminPanel({ photos, onPhotosChange, onClose }) {
               {tab === 'info' && (
                 <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.7 }}>
                   <div style={{ fontWeight: 600, color: '#1a1a2e', marginBottom: 12 }}>Point System</div>
-                  <div>• BQL = <strong style={{ color: '#0fb86d' }}>1 point</strong></div>
+                  <div>• Completed Meeting Count = <strong style={{ color: '#0fb86d' }}>1 point</strong></div>
                   <div>• SQL = <strong style={{ color: '#0fb86d' }}>2 points</strong></div>
                   <div>• Active Trial = <strong style={{ color: '#0fb86d' }}>3 points</strong></div>
                   <div>• Closed Won = <strong style={{ color: '#0fb86d' }}>4 points</strong></div>

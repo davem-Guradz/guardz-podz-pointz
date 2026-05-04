@@ -81,7 +81,7 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
                   <TH label="SDR" />
                   <TH label="SDR" />
                   <TH label="Team" />
-                  <TH label="BQL" sortKey="bqlPts" />
+                  <TH label="Completed Meeting Count" sortKey="bqlPts" />
                   <TH label="SQL" sortKey="sqlPts" />
                   <TH label="Active Trial" sortKey="activeTrialPts" />
                   <TH label="Closed Won" sortKey="closedWonPts" />
@@ -176,7 +176,7 @@ export default function SdrTable({ pointTotals, sdrs, photos, filterTeamId }) {
               <tr style={{ background: '#f9fafb' }}>
                 <TH label="SDR" />
                 <TH label="Pod" />
-                <TH label="BQL" sortKey="bqlPts" />
+                <TH label="Completed Meeting Count" sortKey="bqlPts" />
                 <TH label="SQL" sortKey="sqlPts" />
                 <TH label="Active Trials" sortKey="activeTrialPts" />
                 <TH label="Closed Won" sortKey="closedWonPts" />

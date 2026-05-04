@@ -31,6 +31,7 @@ export const PEOPLE = [
   { id: 'jonathan',  name: 'Jonathan',  role: 'ae',  teamId: 'dream-team',         initials: 'JO', photo: null },
   { id: 'rafaela',   name: 'Rafaela',   role: 'sdr', teamId: 'dream-team',         initials: 'RM', photo: null },
   { id: 'matthew',   name: 'Matthew',   role: 'sdr', teamId: 'dream-team',         initials: 'MT', photo: null },
+  { id: 'joe-azevedo', name: 'Joe Azevedo', role: 'sdr', teamId: 'dream-team',     initials: 'JA', photo: null },
   // Goatz
   { id: 'nick',      name: 'Nick',      role: 'ae',  teamId: 'goatz',              initials: 'NK', photo: null },
   { id: 'marelise',  name: 'Marelise',  role: 'sdr', teamId: 'goatz',              initials: 'MM', photo: null },

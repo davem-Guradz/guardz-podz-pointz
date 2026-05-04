@@ -175,7 +175,7 @@ export default function App() {
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 28, flexWrap: 'wrap' }}>
               {[
                 { label: 'Points', value: leader.points, color: '#0fb86d' },
-                { label: 'BQLs',   value: leader.bql,    color: '#1a1a2e' },
+                { label: 'Meetings', value: leader.bql,    color: '#1a1a2e' },
                 { label: 'SQLs',   value: leader.sql,    color: '#1a1a2e' },
                 { label: 'Trials', value: leader.activeTrial, color: '#1a1a2e' },
                 { label: 'Won',    value: leader.closedWon,   color: '#d4a017' },
